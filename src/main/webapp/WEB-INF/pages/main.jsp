@@ -31,7 +31,7 @@
                                  "<tr class='productRow'>"
                                + "<td>" + data.items[i].title + "</td>"
                                + "<td>" + data.items[i].description + "</td>"
-                               + "<td>" + data.items[i].price + "</td>"
+                               + "<td>" + data.items[i].price + "</td></tr>"
                        )
                    }
                    $("#count").text("Всего товаров - " + data.count + ".");
