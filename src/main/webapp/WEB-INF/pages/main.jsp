@@ -35,6 +35,7 @@
                        )
                    }
                    $("#count").text("Всего товаров - " + data.count + ".");
+                   $("#addBtnPlace").html('<a href="product/add?userId=' + userId + '" class="btn btn-info" role="button">Добавить товар</a>');
                })
            });
         });
@@ -42,9 +43,7 @@
 </head>
 <body>
 <div class="container">
-
-    <div class="row">
-        <div class="page-header text-center">
+     <div class="page-header text-center">
             <ul>
                 <li><i>Server side - Java. Spring Framework. Tomcat. Maven.</i></li>
                 <li><i>Frontend - Javascript. jQuery. AJAX. JSON. JSP.</i></li>
@@ -52,6 +51,8 @@
                 <li><i>Design - HTML. CSS. Bootstrap.</i></li>
             </ul>
         </div>
+        <div class="row">
+
         <div class="col-lg-4">
             <select multiple id="userId" class="form-control">
                 <% for (UserDoc user : users) { %>
@@ -66,6 +67,7 @@
                     <tr id="productHeadRow"><th>Название</th><th>Описание</th><th>Цена</th></tr>
                     </table>
                 <p id="count"></p>
+                <div id="addBtnPlace"></div>
             </div>
             </div>
         </div>

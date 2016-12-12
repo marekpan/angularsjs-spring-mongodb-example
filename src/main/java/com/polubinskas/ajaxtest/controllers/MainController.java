@@ -1,13 +1,13 @@
 package com.polubinskas.ajaxtest.controllers;
 
+import com.polubinskas.ajaxtest.models.ProductDoc;
 import com.polubinskas.ajaxtest.models.UserDoc;
+import com.polubinskas.ajaxtest.routes.AppRoutes;
 import com.polubinskas.ajaxtest.service.ShopService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -23,5 +23,18 @@ public class MainController {
     public ModelAndView main() {
         List<UserDoc> allUsers = shopService.findAllUsers();
         return new ModelAndView("main", "users", allUsers);
+    }
+
+    @RequestMapping(value = AppRoutes.PRODUCT_CREATE, method = RequestMethod.GET)
+    public String create() {
+        return "addProduct";
+    }
+
+    @RequestMapping(value = AppRoutes.PRODUCT_CREATE, method = RequestMethod.POST)
+    public String create(@ModelAttribute ProductDoc productDoc,
+                         @RequestParam String ownerId) {
+        productDoc.setOwner(new ObjectId(ownerId));
+        shopService.saveProduct(productDoc);
+        return "redirect:/";
     }
 }

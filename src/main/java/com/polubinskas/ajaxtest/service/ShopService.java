@@ -32,4 +32,8 @@ public class ShopService {
         response.setItems(mongoTemplate.find(query, ProductDoc.class));
         return response;
     }
+
+    public void saveProduct(ProductDoc productDoc) {
+        mongoTemplate.save(productDoc);
+    }
 }
