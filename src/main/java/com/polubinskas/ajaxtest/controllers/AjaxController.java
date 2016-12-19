@@ -2,6 +2,7 @@ package com.polubinskas.ajaxtest.controllers;
 
 import com.polubinskas.ajaxtest.models.AjaxResponse;
 import com.polubinskas.ajaxtest.models.ProductDoc;
+import com.polubinskas.ajaxtest.routes.AppRoutes;
 import com.polubinskas.ajaxtest.service.ShopService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,10 @@ public class AjaxController {
     @RequestMapping(value = "/product/all", method = RequestMethod.GET)
     public AjaxResponse<ProductDoc> productsByUser(@RequestParam(required = true) String userId) {
         return shopService.findAllProductsByOwner(new ObjectId(userId));
+    }
+
+    @RequestMapping(value = AppRoutes.PRODUCT_DELETE, method = RequestMethod.POST)
+    public void delete(@RequestParam String productId) {
+        shopService.remove(new ObjectId(productId));
     }
 }

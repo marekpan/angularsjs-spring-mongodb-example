@@ -21,23 +21,44 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            var userId;
+
+            function showProducts(data) {
+                for(var i = 0; i<data.items.length; i++)
+                {
+                    $("#productHeadRow").after(
+                            "<tr class='productRow'>"
+                            + "<td>" + data.items[i].title + "</td>"
+                            + "<td>" + data.items[i].description + "</td>"
+                            + "<td>" + data.items[i].price + "</td>"
+                            + "<td><div class='btn-group'>" +
+                            "<button type='button' data-product-id='" + data.items[i].id + "' class='btn btn-primary editBtn'>Редактировать</button>" +
+                            "<button type='button' data-product-id='" + data.items[i].id + "' class='btn btn-danger deleteBtn'>Удалить</button>" +
+                            "</div></td></tr>"
+                    )
+                }
+
+                $("#count").text("Всего товаров - " + data.count + ".");
+                $("#addBtnPlace").html('<a href="product/add?userId=' + userId + '" class="btn btn-info" role="button">Добавить товар</a>');
+            }
+
+            function getProducts() {
+                $(".productRow").remove();
+                userId = $("#userId").val();
+                $.getJSON("product/all?userId=" + userId, showProducts);
+            }
+
            $("#userId").change(function () {
-               $(".productRow").remove();
-               var userId = $("#userId").val();
-               $.getJSON("product/all?userId=" + userId, function(data) {
-                   for(var i = 0; i<data.items.length; i++)
-                   {
-                       $("#productHeadRow").after(
-                                 "<tr class='productRow'>"
-                               + "<td>" + data.items[i].title + "</td>"
-                               + "<td>" + data.items[i].description + "</td>"
-                               + "<td>" + data.items[i].price + "</td></tr>"
-                       )
-                   }
-                   $("#count").text("Всего товаров - " + data.count + ".");
-                   $("#addBtnPlace").html('<a href="product/add?userId=' + userId + '" class="btn btn-info" role="button">Добавить товар</a>');
-               })
+               getProducts();
            });
+
+            $(document).on("click", ".deleteBtn", function() {
+                var productId = $(this).attr("data-product-id");
+                $.post("product/delete", {"productId" : productId}, function() {
+                    getProducts();
+                })
+            })
+
         });
     </script>
 </head>
@@ -64,7 +85,7 @@
         <div class="col-lg-8">
             <div id="productTablePlace">
                 <table id="productTable" class="table table-hover table-bordered">
-                    <tr id="productHeadRow"><th>Название</th><th>Описание</th><th>Цена</th></tr>
+                    <tr id="productHeadRow"><th>Название</th><th>Описание</th><th>Цена</th><th>Действия</th></tr>
                     </table>
                 <p id="count"></p>
                 <div id="addBtnPlace"></div>

@@ -36,4 +36,8 @@ public class ShopService {
     public void saveProduct(ProductDoc productDoc) {
         mongoTemplate.save(productDoc);
     }
+
+    public void remove(ObjectId productId) {
+        mongoTemplate.remove(mongoTemplate.findById(productId, ProductDoc.class));
+    }
 }
