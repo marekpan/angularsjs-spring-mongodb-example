@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AjaxController {
     @Autowired ShopService shopService;
 
-    @RequestMapping(value = "/product/all", method = RequestMethod.GET)
+    @RequestMapping(value = AppRoutes.PRODUCT_ALL, method = RequestMethod.GET)
     public AjaxResponse<ProductDoc> productsByUser(@RequestParam(required = true) String userId) {
         return shopService.findAllProductsByOwner(new ObjectId(userId));
     }

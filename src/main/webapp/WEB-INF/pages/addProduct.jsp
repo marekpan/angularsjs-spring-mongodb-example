@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HP
-  Date: 11.12.2016
-  Time: 15:50
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.polubinskas.ajaxtest.routes.AppRoutes" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -32,7 +26,7 @@
     </div>
     <div class="container">
         <div class="row">
-            <form action="/product/add" method="POST">
+            <form action="<%= AppRoutes.PRODUCT_CREATE%>" method="POST">
                 <div class="form-group">
                     <label for="title">Title:</label>
                     <input type="text" class="form-control" name="title" id="title"/>

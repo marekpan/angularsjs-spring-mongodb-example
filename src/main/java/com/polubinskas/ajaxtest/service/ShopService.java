@@ -33,6 +33,10 @@ public class ShopService {
         return response;
     }
 
+    public ProductDoc findProductById(ObjectId id) {
+        return mongoTemplate.findById(id, ProductDoc.class);
+    }
+
     public void saveProduct(ProductDoc productDoc) {
         mongoTemplate.save(productDoc);
     }

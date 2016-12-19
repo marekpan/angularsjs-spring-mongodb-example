@@ -37,4 +37,18 @@ public class MainController {
         shopService.saveProduct(productDoc);
         return "redirect:/";
     }
+
+    @RequestMapping(value = AppRoutes.PRODUCT_EDIT, method = RequestMethod.GET)
+    public ModelAndView edit(@RequestParam String productId) {
+        ProductDoc product = shopService.findProductById(new ObjectId(productId));
+        return new ModelAndView("edit", "product", product);
+    }
+
+    @RequestMapping(value = AppRoutes.PRODUCT_EDIT, method = RequestMethod.POST)
+    public String edit(@ModelAttribute ProductDoc productDoc,
+                       @RequestParam String ownerId) {
+        productDoc.setOwner(new ObjectId(ownerId));
+        shopService.saveProduct(productDoc);
+        return "redirect:/";
+    }
 }

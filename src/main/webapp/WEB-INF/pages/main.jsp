@@ -3,6 +3,7 @@
 <%@ page import="com.polubinskas.ajaxtest.models.UserDoc" %>
 <%@ page pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
+<%@ page import="com.polubinskas.ajaxtest.routes.AppRoutes" %>
 <% List<UserDoc> users = (List<UserDoc>) request.getAttribute("users"); %>
 
 <!DOCTYPE html>
@@ -21,6 +22,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             var userId;
 
             function showProducts(data) {
@@ -48,15 +50,17 @@
                 $.getJSON("product/all?userId=" + userId, showProducts);
             }
 
-           $("#userId").change(function () {
-               getProducts();
-           });
+           $("#userId").change(getProducts);
 
             $(document).on("click", ".deleteBtn", function() {
-                var productId = $(this).attr("data-product-id");
-                $.post("product/delete", {"productId" : productId}, function() {
-                    getProducts();
-                })
+                if(confirm("Вы уверены что хотите удалить?")) {
+                    var productId = $(this).attr("data-product-id");
+                    $.post("product/delete", {"productId": productId}, getProducts);
+                }
+            })
+            
+            $(document).on("click", ".editBtn", function () {
+                window.location = "<%= AppRoutes.PRODUCT_EDIT%>?productId=" + $(this).attr("data-product-id") + "&userId=" + userId;
             })
 
         });
