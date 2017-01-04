@@ -1,16 +1,8 @@
-<%@ page import="com.polubinskas.ajaxtest.models.AjaxResponse" %>
-<%@ page import="com.polubinskas.ajaxtest.models.ProductDoc" %>
-<%@ page import="com.polubinskas.ajaxtest.models.UserDoc" %>
-<%@ page pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="com.polubinskas.ajaxtest.routes.AppRoutes" %>
-<% List<UserDoc> users = (List<UserDoc>) request.getAttribute("users"); %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ajax Test</title>
+    <title>Title</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -20,82 +12,145 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 
-            var userId;
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular-route.js"></script>
 
-            function showProducts(data) {
-                for(var i = 0; i<data.items.length; i++)
-                {
-                    $("#productHeadRow").after(
-                            "<tr class='productRow'>"
-                            + "<td>" + data.items[i].title + "</td>"
-                            + "<td>" + data.items[i].description + "</td>"
-                            + "<td>" + data.items[i].price + "</td>"
-                            + "<td><div class='btn-group'>" +
-                            "<button type='button' data-product-id='" + data.items[i].id + "' class='btn btn-primary editBtn'>Редактировать</button>" +
-                            "<button type='button' data-product-id='" + data.items[i].id + "' class='btn btn-danger deleteBtn'>Удалить</button>" +
-                            "</div></td></tr>"
-                    )
-                }
-
-                $("#count").text("Всего товаров - " + data.count + ".");
-                $("#addBtnPlace").html('<a href="product/add?userId=' + userId + '" class="btn btn-info" role="button">Добавить товар</a>');
-            }
-
-            function getProducts() {
-                $(".productRow").remove();
-                userId = $("#userId").val();
-                $.getJSON("product/all?userId=" + userId, showProducts);
-            }
-
-           $("#userId").change(getProducts);
-
-            $(document).on("click", ".deleteBtn", function() {
-                if(confirm("Вы уверены что хотите удалить?")) {
-                    var productId = $(this).attr("data-product-id");
-                    $.post("product/delete", {"productId": productId}, getProducts);
-                }
-            })
-            
-            $(document).on("click", ".editBtn", function () {
-                window.location = "<%= AppRoutes.PRODUCT_EDIT%>?productId=" + $(this).attr("data-product-id") + "&userId=" + userId;
-            })
-
-        });
-    </script>
 </head>
-<body>
-<div class="container">
-     <div class="page-header text-center">
-            <ul>
-                <li><i>Server side - Java. Spring Framework. Tomcat. Maven.</i></li>
-                <li><i>Frontend - Javascript. jQuery. AJAX. JSON. JSP.</i></li>
-                <li><i>Database - MongoDB.</i></li>
-                <li><i>Design - HTML. CSS. Bootstrap.</i></li>
-            </ul>
-        </div>
-        <div class="row">
+<body ng-app="testApp">
+<div class="container" ng-controller="MainController as ctrl" ng-init="ctrl.getUsers()">
+    <div class="page-header text-center">
+        <ul>
+            <li><i>Server side - Java. Spring Framework. Tomcat. Maven.</i></li>
+            <li><i>Frontend - Javascript(AngularJS, jQuery. AJAX. JSON, JSP)</i></li>
+            <li><i>Database - MongoDB.</i></li>
+            <li><i>Design - HTML. CSS. Bootstrap.</i></li>
+        </ul>
+    </div>
+    <div class="row">
 
         <div class="col-lg-4">
-            <select multiple id="userId" class="form-control">
-                <% for (UserDoc user : users) { %>
-                <%= "<option value='" + user.getId() + "'>" + user.getFirstName() + " " + user.getLastName() + ". "
-                        + user.getCity() + ". Age: " + user.getAge() + "</option>" %>
-                <% } %>
+            <select multiple id="userId" class="form-control" ng-model="ctrl.selectData.currentUser"
+                    ng-options="user.id as user.firstName + ' ' + user.lastName for user in ctrl.users"
+                    ng-change="ctrl.getProducts()">
             </select>
         </div>
         <div class="col-lg-8">
             <div id="productTablePlace">
                 <table id="productTable" class="table table-hover table-bordered">
                     <tr id="productHeadRow"><th>Название</th><th>Описание</th><th>Цена</th><th>Действия</th></tr>
-                    </table>
-                <p id="count"></p>
-                <div id="addBtnPlace"></div>
-            </div>
+                    <tr ng-repeat="product in ctrl.products.items" class="productRow">
+                        <td>{{product.title}}</td>
+                        <td>{{product.description}}</td>
+                        <td>{{product.price}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info" ng-click="ctrl.editWindow(product)">Edit</button>
+                                <button type="button" class="btn btn-danger" ng-click="ctrl.deleteProduct(product.id)">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div ng-show="ctrl.userChoosed">
+                <p id="count">Count: {{ctrl.products.count}}</p>
+                <div id="addBtnPlace"><a href="#/addProduct" class="btn btn-info" role="button">Add Product</a></div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4"><div ng-view></div></div>
+    </div>
+</div>
 </body>
+
+<script>
+    var app = angular.module("testApp", ["ngRoute"]);
+    app.config(["$routeProvider", function ($routeProvider) {
+        $routeProvider.when("/addProduct", {
+            templateUrl: "products/add"
+        }).when("/editProduct", {
+            templateUrl: "products/edit"
+        })
+    }]);
+
+    app.controller("MainController", ["$http", "$routeParams", "$window", function($http, $routeParams, $window) {
+        var self = this;
+
+        self.selectData = {
+            currentUser: "test"
+        };
+
+        self.getUsers = function() {
+            $http.get("users/all").then(function(response) {
+                self.users = response.data.items;
+            });
+        };
+
+        self.getProducts = function() {
+            $http.get("products/all?userId=" + self.selectData.currentUser).then(function(response) {
+                self.products = {"count": response.data.count, "items": response.data.items};
+            });
+            self.userChoosed = true;
+            $window.location.href = "#/";
+        };
+
+        self.addProduct = function() {
+            /**
+            $http({
+                method: "POST",
+                url: "products/add",
+                data: {
+                    title: self.addForm.title,
+                    description: self.addForm.description,
+                    price: self.addForm.price,
+                    ownerId: self.selectData.currentUser[0]
+                },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
+             */
+
+            $.post("products/add", {
+                    title: self.addForm.title,
+                    description: self.addForm.description,
+                    price: self.addForm.price,
+                    ownerId: self.selectData.currentUser[0]
+                }, self.getProducts);
+        };
+
+        self.deleteProduct = function(productId) {
+            $.post("products/delete", {
+                productId: productId
+            }, self.getProducts);
+        };
+        
+        self.editWindow = function (product) {
+            alert(product.id);
+            self.editPData = {
+                id: product.id,
+                title: product.title,
+                description: product.description,
+                price: product.price
+            };
+            $window.location.href = "#/editProduct";
+        };
+
+        self.editProduct = function () {
+            alert("Edited");
+            $.post("products/edit", {
+                id: self.editPData.id,
+                title: self.editPData.title,
+                description: self.editPData.description,
+                price: self.editPData.price,
+                ownerId: self.selectData.currentUser[0]
+            }, self.getProducts);
+        };
+
+
+    }]);
+</script>
+
 </html>

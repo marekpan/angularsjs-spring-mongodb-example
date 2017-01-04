@@ -1,4 +1,4 @@
-package com.polubinskas.ajaxtest.models;
+package com.polubinskas.ajaxtest.base.models;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.polubinskas.ajaxtest.models;
+package com.polubinskas.ajaxtest.product.models;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

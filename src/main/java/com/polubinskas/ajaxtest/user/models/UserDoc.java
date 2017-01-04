@@ -1,4 +1,4 @@
-package com.polubinskas.ajaxtest.models;
+package com.polubinskas.ajaxtest.user.models;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -11,17 +11,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class UserDoc {
     @Id
-    private ObjectId id;
+    private String id;
     private String firstName;
     private String lastName;
     private Integer age;
     private String city;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
