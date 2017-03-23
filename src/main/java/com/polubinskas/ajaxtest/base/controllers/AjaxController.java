@@ -22,16 +22,14 @@ public class AjaxController {
     @Autowired ProductService productService;
     @Autowired ProductApiService productApiService;
 
-    @RequestMapping(value = ProductRoutes.PRODUCT_CREATE, method = RequestMethod.POST)
-    public void create(@ModelAttribute ProductDoc productDoc,
-                         @RequestParam String ownerId) {
-        productDoc.setOwner(new ObjectId(ownerId));
-        productService.save(productDoc);
+    @RequestMapping(value = UserRoutes.USERS_ALL, method = RequestMethod.GET)
+    public AjaxResponse<UserDoc> allUsers() {
+        return userApiService.all();
     }
 
-    @RequestMapping(value = ProductRoutes.PRODUCT_EDIT, method = RequestMethod.POST)
-    public void edit(@ModelAttribute ProductDoc productDoc,
-                       @RequestParam String ownerId) {
+    @RequestMapping(value = {ProductRoutes.PRODUCT_CREATE, ProductRoutes.PRODUCT_EDIT}, method = RequestMethod.POST)
+    public void createOrEdit(@ModelAttribute ProductDoc productDoc,
+                         @RequestParam String ownerId) {
         productDoc.setOwner(new ObjectId(ownerId));
         productService.save(productDoc);
     }
@@ -41,13 +39,8 @@ public class AjaxController {
         productService.remove(new ObjectId(productId));
     }
 
-    @RequestMapping(value = UserRoutes.USERS_ALL, method = RequestMethod.GET)
-    public AjaxResponse<UserDoc> allUsers() {
-        return userApiService.all();
-    }
-
     @RequestMapping(value = ProductRoutes.PRODUCT_ALL, method = RequestMethod.GET)
     public AjaxResponse<ProductDoc> productsByUser(@RequestParam(required = true) String userId) {
-        return productApiService.findByOwner(new ObjectId(userId));
+        return productApiService.findAllByOwner(new ObjectId(userId));
     }
 }

@@ -36,6 +36,7 @@ public class ProductService {
 
     }
 
+    //Base methods
     public List<ProductDoc> find(Query query) {
         return mongoTemplate.find(query, ProductDoc.class);
     }

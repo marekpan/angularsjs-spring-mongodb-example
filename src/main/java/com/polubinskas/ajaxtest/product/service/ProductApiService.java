@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class ProductApiService {
     @Autowired ProductService productService;
 
-    public AjaxResponse<ProductDoc> findByOwner(ObjectId ownerId) {
+    public AjaxResponse<ProductDoc> findAllByOwner(ObjectId ownerId) {
         Criteria criteria = Criteria.where("owner").is(ownerId);
         Query query = new Query(criteria);
         AjaxResponse<ProductDoc> response = new AjaxResponse<ProductDoc>();

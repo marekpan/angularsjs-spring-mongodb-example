@@ -22,19 +22,7 @@ public class UserService {
         return mongoTemplate.findAll(UserDoc.class);
     }
 
-    public UserDoc findById(ObjectId userId) {
-        return mongoTemplate.findById(userId, UserDoc.class);
-    }
-
-    public void save(UserDoc userDoc) {
-        mongoTemplate.save(userDoc);
-    }
-
-    public void remove(ObjectId userId) {
-        UserDoc userDoc = mongoTemplate.findById(userId, UserDoc.class);
-        mongoTemplate.remove(userDoc);
-    }
-
+    //Base methods
     public List<UserDoc> find(Query query) {
         return mongoTemplate.find(query, UserDoc.class);
     }

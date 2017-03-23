@@ -39,7 +39,7 @@
         <div class="col-lg-8">
             <div id="productTablePlace">
                 <table id="productTable" class="table table-hover table-bordered">
-                    <tr id="productHeadRow"><th>Название</th><th>Описание</th><th>Цена</th><th>Действия</th></tr>
+                    <tr id="productHeadRow"><th>Title</th><th>Description</th><th>Price</th><th>Edit/Delete</th></tr>
                     <tr ng-repeat="product in ctrl.products.items" class="productRow">
                         <td>{{product.title}}</td>
                         <td>{{product.description}}</td>
